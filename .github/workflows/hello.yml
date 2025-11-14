@@ -11,6 +11,6 @@ jobs:
     steps:
       - name: Show hello
         run: |
-          echo "Hello from GitHub Actions!"
+          echo "Hello from GitHub Actions! and manual"
           echo "Repository: $GITHUB_REPOSITORY"
           echo "Actor: $GITHUB_ACTOR"
