@@ -2,7 +2,8 @@ name: Hello Actions
 
 on:
   push:
-    branches: [ main ]
+    branches: 
+    #[ main ]
   workflow_dispatch:    # allows manual run in Actions UI
 
 jobs:
