@@ -1,0 +1,16 @@
+#!/bin/bash
+set -e 
+apt update -y
+apt install -y python3 python3-pip python3.12-venv git 
+
+cd /home/ubuntu
+mkdir -p app
+cd app/
+python3 -m venv myenv
+source myenv/bin/activate
+pip3 install flask python-dotenv
+pip3 install --upgrade pip
+git clone https://maratafrasheed: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@github.com/maratafrasheed/python-application-test.git 
+ 
+cd python-application-test
+nohup /home/ubuntu/app/myenv/bin/python test.py > /home/ubuntu/app/test.log 2>&1 &
