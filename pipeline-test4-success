@@ -1,0 +1,74 @@
+name: Deploy Python App to EC2 (test4)
+
+on:
+  push:
+    branches: # [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Debug
+        run: |
+          ls
+          ls -l
+          
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Debug
+        run: |
+          ls
+          ls -l
+
+      - name: Kill process using pkill
+        run: |
+          echo "➡️ Killing old Python processes..."
+          sudo pkill -f "test.py" || true
+
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            ls
+            ls -l
+            echo "➡️ Pulling latest code..."
+
+            cd /home/ubuntu/app/python-application-test
+
+            ls
+            ls -l
+
+            # Clean any local modifications
+            git reset --hard
+            git clean -fd
+
+            git pull origin main
+
+            ls -l
+
+            # Activate venv
+            source /home/ubuntu/app/myenv/bin/activate
+
+            ls -l
+
+            pip install -r requirements.txt --upgrade
+
+            ps aux | grep python
+
+            sudo systemctl daemon-reload
+            sudo systemctl restart python-app
+    
+            # sudo /home/ubuntu/app/myenv/bin/python test.py &
+            # sudo nohup /home/ubuntu/app/myenv/bin/python test.py > test.log 2>&1 &
+
+            ps aux | grep python
+            
+            echo "➡️ Running processes:"
+            ps aux | grep test.py
+
+            echo "✔ Deployment complete !"
